@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         Look();
         Move();
         Jump();
-
+        
         for (int i = 0; i < items.Length; i++)
         {
             if (Input.GetKeyDown((i + 1).ToString()))
@@ -92,6 +92,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
 
         cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Move()
@@ -157,6 +160,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         }
         
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
+
     }
 
     public void TakeDamage(float damage)
