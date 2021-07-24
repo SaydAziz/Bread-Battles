@@ -60,8 +60,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             return;
         }
 
-        Look();
+        /*Look();
         Move();
+        Jump();*/
         Jump();
         
         for (int i = 0; i < items.Length; i++)
@@ -159,6 +160,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         {
             return;
         }
+        
+
+        Look();
+        Move();
         
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
 
