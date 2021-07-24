@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3739572494042755028}
   - component: {fileID: 6156796617870619599}
   - component: {fileID: -6996555923222992723}
+  - component: {fileID: 775112664731015140}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -123,7 +124,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 0
   ObservedComponents:
-  - {fileID: -6996555923222992723}
+  - {fileID: 775112664731015140}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -173,7 +174,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 949881081063684194}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
@@ -182,6 +183,18 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &775112664731015140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949881081063684194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c39e18a8fc14384a8c9c0874cb43722, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1470471905909172762
 GameObject:
   m_ObjectHideFlags: 0
