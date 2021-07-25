@@ -6,7 +6,9 @@ using UnityEngine;
 public class SingleShotGun : Gun
 {
     [SerializeField] Camera cam;
-
+    [SerializeField] Animator animator;
+    [SerializeField] ParticleSystem muzzleFlash;
+    [SerializeField] AudioSource ShotSound;
     PhotonView PV;
 
     void Awake()
@@ -22,6 +24,11 @@ public class SingleShotGun : Gun
     {
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
         ray.origin = cam.transform.position;
+
+        animator.SetTrigger("Shoot");
+        muzzleFlash.Play();
+        ShotSound.Play();
+
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
