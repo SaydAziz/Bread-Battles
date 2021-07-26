@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
 
-        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);   
+        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) && moveDir.z == 1 ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);   
 
         Animator.SetFloat("VelocityZ", moveAmount.z);
         Animator.SetFloat("VelocityX", moveAmount.x);
