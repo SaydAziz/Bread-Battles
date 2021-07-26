@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     PhotonView PV;
 
     PlayerManager playerManager;
+    [SerializeField] Animator Animator;
+    [SerializeField] GameObject Mesh;
 
 
     const float maxHealth = 100f;
@@ -45,6 +47,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         if(PV.IsMine)
         {
             EquipItem(0);
+            Mesh.layer = 9;
         }
         else
         {
@@ -84,7 +87,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             Die();
         }
     }
-
     void Look()
     {
         transform.Rotate(Vector3.up * Input.GetAxisRaw("Mouse X") * mouseSensitivity);
@@ -97,14 +99,20 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-
     void Move()
     {
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
 
-        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
-    }
+        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);   
 
+
+        Animator.SetFloat("Velocity", moveAmount.z-1);
+        
+        
+        Debug.Log(smoothMoveVelocity);   
+        Debug.Log(Animator.GetFloat("Velocity"));
+
+    }
     void Jump()
     {
         
@@ -118,9 +126,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         grounded = _grounded;
     }
-
-
-
     void EquipItem(int _index)
     {
         if (_index == previousItemIndex)
@@ -144,7 +149,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
     }
-
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         if (!PV.IsMine && targetPlayer == PV.Owner)
@@ -152,8 +156,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             EquipItem((int)changedProps["itemIndex"]);
         }
     }
-
-
     void FixedUpdate()
     {
         if(!PV.IsMine)
@@ -168,12 +170,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
 
     }
-
     public void TakeDamage(float damage)
     {
         PV.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
-
+   
     [PunRPC]
     void RPC_TakeDamage(float damage)
     {
@@ -192,7 +193,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             Die();
         }
     }
-
     void Die()
     {
         playerManager.Die();
