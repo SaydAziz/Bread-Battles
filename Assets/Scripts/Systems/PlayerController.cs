@@ -106,12 +106,19 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);   
 
-        Animator.SetFloat("Velocity", moveAmount.z-1);
+        Animator.SetFloat("VelocityZ", moveAmount.z);
+        Animator.SetFloat("VelocityX", moveAmount.x);
+
+        //Animator.SetFloat("VelocityZ", 3);
+        //Animator.SetFloat("VelocityX", 3);
+
         
         
         
-        Debug.Log(smoothMoveVelocity);   
-        Debug.Log(Animator.GetFloat("Velocity"));
+        Debug.Log(moveAmount);   
+        Debug.Log("z: " + Animator.GetFloat("VelocityZ"));
+        Debug.Log("x: " + Animator.GetFloat("VelocityX"));
+
 
     }
     void Jump()
