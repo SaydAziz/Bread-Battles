@@ -26,13 +26,12 @@ public class SingleShotGun : Gun
         ray.origin = cam.transform.position;
 
         animator.SetTrigger("Shoot");
-        muzzleFlash.Play();
-        ShotSound.Play();
-
+        PV.RPC("RPC_GunShot", RpcTarget.All);
+        
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             hit.collider.gameObject.GetComponent<IDamageable>()?.TakeDamage(((GunInfo)itemInfo).damage);
-            PV.RPC("RPC_Shoot", RpcTarget.All, hit.point, hit.normal);
+            PV.RPC("RPC_Shoot", RpcTarget.All, hit.point, hit.normal);          
         }
     }
 
@@ -47,6 +46,13 @@ public class SingleShotGun : Gun
             bulletImpactObj.transform.SetParent(colliders[0].transform);        
         }
         
+    }
+
+    [PunRPC]
+    void RPC_GunShot()
+    {
+        muzzleFlash.Play();
+        ShotSound.Play();   
     }
 
 
