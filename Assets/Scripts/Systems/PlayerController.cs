@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject Mesh;
 
 
+
     const float maxHealth = 100f;
     float currentHealth = maxHealth;
 
@@ -105,8 +106,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);   
 
-
         Animator.SetFloat("Velocity", moveAmount.z-1);
+        
         
         
         Debug.Log(smoothMoveVelocity);   
@@ -197,4 +198,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         playerManager.Die();
     }
+
+
 }
