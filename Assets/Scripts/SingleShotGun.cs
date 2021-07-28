@@ -7,8 +7,13 @@ public class SingleShotGun : Gun
 {
     [SerializeField] Camera cam;
     [SerializeField] Animator animator;
+    [SerializeField] Animator FPS_animator;
+
     [SerializeField] ParticleSystem muzzleFlash;
+    [SerializeField] ParticleSystem FPS_muzzleFlash;
+
     [SerializeField] AudioSource ShotSound;
+
     PhotonView PV;
 
     void Awake()
@@ -26,7 +31,11 @@ public class SingleShotGun : Gun
         ray.origin = cam.transform.position;
 
         animator.SetTrigger("Shoot");
+        FPS_animator.SetTrigger("Shoot");
+
+
         PV.RPC("RPC_GunShot", RpcTarget.All);
+        FPS_muzzleFlash.Play();  
         
         if (Physics.Raycast(ray, out RaycastHit hit))
         {

@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] Item[] items;
+    [SerializeField] GameObject[] FPS_items;
+
     int itemIndex;
     int previousItemIndex = -1;
 
@@ -28,7 +30,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     PlayerManager playerManager;
     [SerializeField] Animator Animator;
-    [SerializeField] GameObject Mesh;
+
+
+
+    [SerializeField] GameObject[] LocalMesh;
+    [SerializeField] GameObject[] NetMesh;
+
+
+
+
 
 
 
@@ -48,10 +58,21 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         if(PV.IsMine)
         {
             EquipItem(0);
-            Mesh.layer = 9;
+
+            foreach(GameObject mesh in LocalMesh)
+            {
+                mesh.layer = 9;
+            }
+
+
         }
         else
         {
+            foreach(GameObject mesh in NetMesh)
+            {
+                mesh.layer = 9;
+            }
+
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
             Destroy(ui);
@@ -108,18 +129,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         Animator.SetFloat("VelocityZ", moveAmount.z);
         Animator.SetFloat("VelocityX", moveAmount.x);
-
-        //Animator.SetFloat("VelocityZ", 3);
-        //Animator.SetFloat("VelocityX", 3);
-
-        
-        
-        
-        Debug.Log(moveAmount);   
-        Debug.Log("z: " + Animator.GetFloat("VelocityZ"));
-        Debug.Log("x: " + Animator.GetFloat("VelocityX"));
-
-
     }
     void Jump()
     {
@@ -143,10 +152,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         itemIndex = _index;
         items[itemIndex].itemGameObject.SetActive(true);
+        FPS_items[itemIndex].SetActive(true);
+
+        
 
         if (previousItemIndex != -1)
         {
             items[previousItemIndex].itemGameObject.SetActive(false);
+            FPS_items[previousItemIndex].SetActive(false);
+
+
         }
         previousItemIndex = itemIndex;
 
