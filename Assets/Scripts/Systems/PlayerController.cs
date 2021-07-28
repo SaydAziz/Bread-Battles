@@ -129,6 +129,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         Animator.SetFloat("VelocityZ", moveAmount.z);
         Animator.SetFloat("VelocityX", moveAmount.x);
+
+        Debug.Log(moveAmount);
     }
     void Jump()
     {
