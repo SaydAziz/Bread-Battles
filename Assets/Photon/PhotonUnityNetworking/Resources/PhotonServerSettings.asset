@@ -42,6 +42,12 @@ MonoBehaviour:
   - RPC_Shoot
   - RPC_GunShot
   - RPC_AnimatePlayer
+  - RPC_DeductBlueSlot
+  - RPC_DeductRedSlot
+  - RPC_AssignBlueSlot
+  - RPC_AssignRedSlot
+  - RPC_RemovedBlueSlot
+  - RPC_RemovedRedSlot
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

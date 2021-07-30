@@ -118,8 +118,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
     void Move()
     {
@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         Animator.SetFloat("VelocityZ", moveAmount.z);
         Animator.SetFloat("VelocityX", moveAmount.x);
 
-        Debug.Log(moveAmount);
+        //Debug.Log(moveAmount);
     }
     void Jump()
     {
