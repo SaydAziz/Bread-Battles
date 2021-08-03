@@ -12,6 +12,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] GameObject controller;
     [SerializeField] PlayerInfo player;
  
+ 
     Button BlueButton, RedButton;
  
     static TMP_Text[] BlueText = new TMP_Text[5];
