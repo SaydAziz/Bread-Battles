@@ -9,19 +9,21 @@ using TMPro;
 public class PlayerManager : MonoBehaviour
 {
     PhotonView PV;
-    GameObject controller;
-
+    [SerializeField] GameObject controller;
+    [SerializeField] PlayerInfo player;
+ 
     Button BlueButton, RedButton;
+ 
+    static TMP_Text[] BlueText = new TMP_Text[5];
+    static TMP_Text[] RedText = new TMP_Text[5];
 
-    TMP_Text[] BlueText = new TMP_Text[5];
-    TMP_Text[] RedText = new TMP_Text[5];
-
+    static PlayerInfo[] blueTeam = new PlayerInfo[5];
+    static PlayerInfo[] redTeam = new PlayerInfo[5];
     
+    private static int redSlots = 5;
+    private static int blueSlots = 5;
+    private List<PlayerInfo> playersInRoom = new List<PlayerInfo>();
 
-
-    public int Team = 0;
-    private int RedSlots = 5;
-    private int BlueSlots = 5;
     
     void Awake()
     {
@@ -29,13 +31,13 @@ public class PlayerManager : MonoBehaviour
 
         RedButton = GameObject.Find("SwitchR").GetComponent<Button>();
         BlueButton = GameObject.Find("SwitchB").GetComponent<Button>();  
-
+ 
         BlueText[0] = GameObject.Find("B_Player 1").GetComponent<TMP_Text>();
         BlueText[1] = GameObject.Find("B_Player 2").GetComponent<TMP_Text>();  
         BlueText[2] = GameObject.Find("B_Player 3").GetComponent<TMP_Text>();  
         BlueText[3] = GameObject.Find("B_Player 4").GetComponent<TMP_Text>();  
         BlueText[4] = GameObject.Find("B_Player 5").GetComponent<TMP_Text>();  
-
+ 
         RedText[0] = GameObject.Find("Player 1").GetComponent<TMP_Text>();
         RedText[1] = GameObject.Find("Player 2").GetComponent<TMP_Text>();  
         RedText[2] = GameObject.Find("Player 3").GetComponent<TMP_Text>();  
@@ -46,13 +48,12 @@ public class PlayerManager : MonoBehaviour
     
     void Start()
     {
-        RedButton.onClick.AddListener(SelectTeamRed);
+        //RedButton.onClick.AddListener(SelectTeamRed);
         BlueButton.onClick.AddListener(SelectTeamBlue);
-
 
         if(PV.IsMine)
         {
-            //CreateController();
+            CreateController();
         }
     }
 
@@ -60,6 +61,13 @@ public class PlayerManager : MonoBehaviour
     {
         Transform spawnpoint = SpawnManager.Instance.GetSpawnpoint();
         controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
+        
+        
+        if(PV.IsMine)
+        {
+            PV.RPC("updateUserID", RpcTarget.AllBuffered);
+        }
+
     }
 
     public void Die()
@@ -68,76 +76,60 @@ public class PlayerManager : MonoBehaviour
         CreateController();
     }
 
-
     public void SelectTeamBlue()
     {
-        if (BlueSlots != 0 && Team == 0)
-        {
-            Team = 1;
-            PV.RPC("RPC_AssignBlueSlot", RpcTarget.All, BlueSlots);
-            Debug.Log("BlueSlots: " + BlueSlots);
-            Debug.Log("Team: " + Team);
+        Debug.Log("Players in room: " + playersInRoom);
+        Debug.Log("PlayerID: " + player.userID + " Team: " + player.team);
 
-        }
-        else if (BlueSlots != 0 && Team == 2)
+        foreach(PlayerInfo x in playersInRoom)
         {
-            PV.RPC("RPC_RemovedRedSlot", RpcTarget.All, RedSlots);
-            Team = 1;
-            PV.RPC("RPC_AssignBlueSlot", RpcTarget.All, BlueSlots);
-            Debug.Log("BlueSlots: " + BlueSlots);
-            Debug.Log("Team: " + Team);
-        }
+            if(x.userID == null)
+            {
 
-        
+            }
+            else if (x.userID == PhotonNetwork.LocalPlayer.UserId && x.team == 1)
+            {
+                Debug.Log("Already on team BLUE");
+                Debug.Log("PlayerID: " + x.userID + " Team: " + x.team);
+                return;
+            }
+        }
+        PV.RPC("RPC_JoinBlue", RpcTarget.All);
     }
 
     public void SelectTeamRed()
     {
-        if (RedSlots != 0 && Team == 0)
-        {
-            Team = 2;
-            PV.RPC("RPC_AssignRedSlot", RpcTarget.All, RedSlots);
-            Debug.Log("RedSlots: " + RedSlots);
-            Debug.Log("Team: " + Team);
-        }
-        else if (RedSlots != 0 && Team == 1)
-        {
-            PV.RPC("RPC_RemovedBlueSlot", RpcTarget.All, BlueSlots);
-            Team = 2;
-            PV.RPC("RPC_AssignRedSlot", RpcTarget.All, RedSlots);
-            Debug.Log("RedSlots: " + RedSlots);
-            Debug.Log("Team: " + Team);
-        }
-        
         
     }
 
     [PunRPC]
-    void RPC_AssignRedSlot(int Slots)
+    public void RPC_JoinBlue()
     {
-        RedText[Slots - 1].text = PV.Owner.NickName;
-        RedSlots -= 1;
+        //System
+        //blueTeam[blueSlots-1] = playersInRoom[];
+        blueTeam[blueSlots-1].team = 1;
+        blueSlots--;
+
+        //Visual 
+        for(int i = 4; i >= 0; i--)
+        {
+            bool check = BlueText[i].text.Equals(".");
+            if(check)
+            {
+                BlueText[i].text = PV.Owner.NickName;
+                return;
+            }
+        }
     }
 
     [PunRPC]
-    void RPC_AssignBlueSlot(int Slots)
+    public void updateUserID()
     {
-        BlueText[Slots - 1].text = PV.Owner.NickName;
-        BlueSlots -= 1;
-    }
+        player = controller.GetComponent<PlayerInfo>();
 
-    [PunRPC]
-    void RPC_RemovedRedSlot(int Slots)
-    {
-        RedText[Slots].text = ".";
-        RedSlots += 1;
+        player.userID = PhotonNetwork.LocalPlayer.UserId;
+        
+        playersInRoom.Add(player);
     }
-
-    [PunRPC]
-    void RPC_RemovedBlueSlot(int Slots)
-    {
-        BlueText[Slots].text = ".";
-        BlueSlots += 1;
-    }
-
-}
+    
+}   

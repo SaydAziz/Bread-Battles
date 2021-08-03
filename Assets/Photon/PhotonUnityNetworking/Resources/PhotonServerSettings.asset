@@ -48,6 +48,10 @@ MonoBehaviour:
   - RPC_AssignRedSlot
   - RPC_RemovedBlueSlot
   - RPC_RemovedRedSlot
+  - RPC_GetTeam
+  - SendFullRoomStatus
+  - RPC_JoinBlue
+  - updateUserID
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
