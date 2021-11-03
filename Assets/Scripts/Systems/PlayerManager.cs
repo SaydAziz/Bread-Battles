@@ -23,7 +23,8 @@ public class PlayerManager : MonoBehaviour
     
     void Start()
     {
-
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         if(PV.IsMine)
         {
             CreateController();
